@@ -11,9 +11,7 @@ namespace ServiceLocator.UI
 {
     public class UIService : MonoBehaviour
     {
-        [SerializeField] private EventService eventService;
-        [SerializeField] private WaveService waveService;
-        [SerializeField] private PlayerService playerService;
+        
 
         [Header("Gameplay Panel")]
         [SerializeField] private GameObject gameplayPanel;
@@ -40,10 +38,23 @@ namespace ServiceLocator.UI
         [SerializeField] private Button playAgainButton;
         [SerializeField] private Button quitButton;
 
+        public static UIService Instance;
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
 
         private void Start()
         {
-            monkeySelectionController = new MonkeySelectionUIController(playerService, cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
+            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
             MonkeySelectionPanel.SetActive(false);
             monkeySelectionController.SetActive(false);
 
@@ -58,7 +69,7 @@ namespace ServiceLocator.UI
             SubscribeToEvents();
         }
 
-        public void SubscribeToEvents() => eventService.OnMapSelected.AddListener(OnMapSelected);
+        public void SubscribeToEvents() => EventService.Instance.OnMapSelected.AddListener(OnMapSelected);
 
         public void OnMapSelected(int mapID)
         {
@@ -71,7 +82,7 @@ namespace ServiceLocator.UI
 
         private void OnNextWaveButton()
         {
-            waveService.StarNextWave();
+            WaveService.Instance.StarNextWave();
             SetNextWaveButton(false);
         }
 
