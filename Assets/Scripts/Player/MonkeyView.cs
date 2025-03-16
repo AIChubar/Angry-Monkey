@@ -31,14 +31,14 @@ namespace ServiceLocator.Player
         {
             if (collision.TryGetComponent<BloonView>(out BloonView bloonView))
             {
-                controller.BloonEnteredRange(bloonView.GetComponent<BloonController>());
+                controller.BloonEnteredRange(bloonView.Controller);
             }
         }
         private void OnTriggerExit2D(Collider2D collision)
         {
             if (collision.TryGetComponent<BloonView>(out BloonView bloonView))
             {
-                controller.BloonExitedRange(bloonView.GetComponent<BloonController>());
+                controller.BloonExitedRange(bloonView.Controller);
             }
         }
         public void PlayAnimation(MonkeyAnimation animationToPlay) => monkeyAnimator.Play(animationToPlay.ToString(), 0);
