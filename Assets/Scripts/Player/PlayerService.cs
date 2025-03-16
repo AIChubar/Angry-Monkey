@@ -37,6 +37,10 @@ namespace ServiceLocator.Player
 
         public void Update()
         {
+            if (activeMonkeys.Count > 0)
+            {
+                activeMonkeys.ForEach(monkey => monkey.UpdateMonkey());
+            }
             if (Input.GetMouseButtonDown(0))
             {
                 UpdateSelectedMonkeyDisplay();
