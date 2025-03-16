@@ -1,6 +1,7 @@
 using ServiceLocator.Player;
 using ServiceLocator.Sound;
 using System.Collections.Generic;
+using ServiceLocator.Map;
 using UnityEngine;
 
 namespace ServiceLocator.Wave.Bloon
@@ -46,9 +47,9 @@ namespace ServiceLocator.Wave.Bloon
             bloonView.gameObject.SetActive(true);
         }
 
-        public void SetWayPoints(List<Vector3> waypointsToSet, int startingWaypointIndex)
+        public void SetWayPoints( int startingWaypointIndex)
         {
-            waypoints = waypointsToSet;
+            waypoints = MapService.Instance.GetWayPointsForCurrentMap();
             currentWaypointIndex = startingWaypointIndex;
         }
 
