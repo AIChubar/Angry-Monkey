@@ -15,6 +15,7 @@ namespace ServiceLocator.UI
         private Sprite spriteToSet;
         private Vector2 originalAnchoredPosition;
         private Vector3 originalPosition;
+        private Vector2 dragOffset;
 
         public void ConfigureImageHandler(Sprite spriteToSet, MonkeyCellController owner)
         {
@@ -31,13 +32,31 @@ namespace ServiceLocator.UI
             originalAnchoredPosition = rectTransform.anchoredPosition;
         }
 
-        public void OnPointerDown(PointerEventData eventData) => monkeyImage.color = new Color(1, 1, 1, 0.6f);
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            monkeyImage.color = new Color(1, 1, 1, 0.6f);
 
+            // Store the offset between the pointer and the image's current position
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform.parent as RectTransform,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector2 localPointerPos);
+
+            dragOffset = rectTransform.anchoredPosition - localPointerPos;
+        }
         public void OnDrag(PointerEventData eventData)
         {
-            rectTransform.anchoredPosition += eventData.delta;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform.parent as RectTransform,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector2 localPointerPos);
+
+            rectTransform.anchoredPosition = localPointerPos + dragOffset;
             owner.MonkeyDraggedAt(eventData.position);
         }
+
 
         public void OnEndDrag(PointerEventData eventData)
         {
