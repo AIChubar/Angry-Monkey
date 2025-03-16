@@ -47,13 +47,8 @@ namespace ServiceLocator.UI
         }
         public void OnDrag(PointerEventData eventData)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                rectTransform.parent as RectTransform,
-                eventData.position,
-                eventData.pressEventCamera,
-                out Vector2 localPointerPos);
+            rectTransform.position = eventData.position;
 
-            rectTransform.anchoredPosition = localPointerPos + dragOffset;
             owner.MonkeyDraggedAt(eventData.position);
         }
 
