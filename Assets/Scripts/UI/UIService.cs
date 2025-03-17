@@ -1,8 +1,11 @@
 using System.Collections.Generic;
+using ServiceLocator.Events;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using ServiceLocator.Main;
+using ServiceLocator.Player;
+using ServiceLocator.Wave;
 using UnityEngine.SceneManagement;
 
 namespace ServiceLocator.UI
@@ -20,6 +23,8 @@ namespace ServiceLocator.UI
         [Header("Level Selection Panel")]
         [SerializeField] private GameObject levelSelectionPanel;
         [SerializeField] private Button Map1Button;
+         private MapButton map1Button;
+
 
         [Header("Monkey Selection UI")]
         private MonkeySelectionUIController monkeySelectionController;
@@ -33,11 +38,23 @@ namespace ServiceLocator.UI
         [SerializeField] private TextMeshProUGUI gameEndText;
         [SerializeField] private Button playAgainButton;
         [SerializeField] private Button quitButton;
-
+        private PlayerService playerService;
+        private EventService eventService;
+        private WaveService waveService;
 
         private void Start()
         {
-            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects);
+            
+        }
+        
+        public void Init(PlayerService playerService, EventService eventService, WaveService waveService)
+        {
+            this.waveService = waveService;
+            this.eventService = eventService;
+            this.playerService = playerService;
+            map1Button = Map1Button.GetComponent<MapButton>();
+            map1Button.Init(eventService);
+            monkeySelectionController = new MonkeySelectionUIController(cellContainer, monkeyCellPrefab, monkeyCellScriptableObjects, playerService);
             MonkeySelectionPanel.SetActive(false);
             monkeySelectionController.SetActive(false);
 
@@ -50,7 +67,7 @@ namespace ServiceLocator.UI
             playAgainButton.onClick.AddListener(OnPlayAgainButtonClicked);
         }
 
-        public void SubscribeToEvents() => GameService.Instance.EventService.OnMapSelected.AddListener(OnMapSelected);
+        public void SubscribeToEvents() => eventService.OnMapSelected.AddListener(OnMapSelected);
 
         public void OnMapSelected(int mapID)
         {
@@ -63,7 +80,7 @@ namespace ServiceLocator.UI
 
         private void OnNextWaveButton()
         {
-            GameService.Instance.WaveService.StarNextWave();
+            waveService.StarNextWave();
             SetNextWaveButton(false);
         }
 
@@ -91,5 +108,6 @@ namespace ServiceLocator.UI
                 gameEndText.SetText("Game Over");
         }
 
+        
     }
 }
