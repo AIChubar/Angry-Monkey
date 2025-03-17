@@ -2,7 +2,6 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
 using ServiceLocator.Main;
-using UnityEditor.MPE;
 using ServiceLocator.Events;
 using EventService = ServiceLocator.Events.EventService;
 
